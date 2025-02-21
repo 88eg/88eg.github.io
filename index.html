@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Рабочее правое меню</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            transition: margin-right 0.3s;
+        }
+
+        /* Основное меню */
+        .sidebar {
+            height: 100%;
+            width: 300px;
+            position: fixed;
+            top: 0;
+            right: -300px;
+            background: #2c3e50;
+            overflow-x: hidden;
+            transition: 0.3s;
+            z-index: 1000;
+            box-shadow: -2px 0 10px rgba(0,0,0,0.1);
+        }
+
+        /* Шапка меню */
+        .sidebar-header {
+            padding: 25px;
+            background: #34495e;
+            color: white;
+            text-align: center;
+        }
+
+        /* Список меню */
+        .sidebar-menu {
+            list-style: none;
+            padding: 20px 0;
+        }
+
+        /* Элементы меню */
+        .menu-item {
+            position: relative;
+        }
+
+        .menu-item > a {
+            color: white;
+            text-decoration: none;
+            padding: 15px 30px;
+            display: block;
+            transition: 0.2s;
+        }
+
+        /* Подменю */
+        .submenu {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            background: #34495e;
+        }
+
+        .submenu.active {
+            max-height: 500px;
+        }
+
+        /* Иконка подменю */
+        .has-submenu::after {
+            content: '▼';
+            float: right;
+            font-size: 0.8em;
+            padding-left: 10px;
+        }
+
+        /* Кнопка бургер */
+        .burger-btn {
+            position: fixed;
+            right: 20px;
+            top: 20px;
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 1001;
+            color: #2c3e50;
+        }
+
+        /* Основной контент */
+        .content {
+            padding: 80px 30px 30px;
+            transition: 0.3s;
+        }
+
+        /* Затемнение фона */
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 999;
+        }
+
+        /* Активное состояние меню */
+        .sidebar.active {
+            right: 0;
+        }
+
+        /* Десктопная версия */
+        @media (min-width: 768px) {
+            .sidebar {
+                right: 0;
+            }
+            
+            .content {
+                margin-right: 300px;
+            }
+            
+            .burger-btn {
+                display: none;
+            }
+            
+            .overlay {
+                display: none !important;
+            }
+            
+            /* Подменю для десктопа */
+            .submenu {
+                position: absolute;
+                left: auto;
+                right: 100%;
+                top: 0;
+                min-width: 200px;
+                background: #2c3e50;
+                box-shadow: -2px 2px 5px rgba(0,0,0,0.2);
+                max-height: none !important;
+                opacity: 0;
+                visibility: hidden;
+                transition: opacity 0.3s, visibility 0.3s;
+                padding: 0;
+            }
+
+            .menu-item:hover .submenu {
+                opacity: 1;
+                visibility: visible;
+            }
+
+            .has-submenu::after {
+                content: '◀';
+                margin-right: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="burger-btn">☰</div>
+    <div class="overlay"></div>
+
+    <nav class="sidebar">
+        <div class="sidebar-header">
+            <h2>Меню</h2>
+        </div>
+        <ul class="sidebar-menu">
+            <li class="menu-item">
+                <a href="#">Главная</a>
+            </li>
+            <li class="menu-item">
+                <a href="#" class="has-submenu">Услуги</a>
+                <ul class="submenu">
+                    <li><a href="#">Веб-разработка</a></li>
+                    <li><a href="#">Дизайн</a></li>
+                    <li><a href="#">Маркетинг</a></li>
+                </ul>
+            </li>
+            <li class="menu-item">
+                <a href="#" class="has-submenu">Продукты</a>
+                <ul class="submenu">
+                    <li><a href="#">ПО для бизнеса</a></li>
+                    <li><a href="#">Мобильные приложения</a></li>
+                </ul>
+            </li>
+            <li class="menu-item">
+                <a href="#">Контакты</a>
+            </li>
+        </ul>
+    </nav>
+
+    <main class="content">
+        <h1>88eg</h1>
+        <p>website in progress... </p>
+    </main>
+
+    <script>
+        // Инициализация элементов
+        const burgerBtn = document.querySelector('.burger-btn');
+        const sidebar = document.querySelector('.sidebar');
+        const overlay = document.querySelector('.overlay');
+        const submenuTriggers = document.querySelectorAll('.has-submenu');
+
+        // Открытие/закрытие главного меню
+        burgerBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            sidebar.classList.toggle('active');
+            overlay.style.display = 'block';
+        });
+
+        // Работа с подменю
+        submenuTriggers.forEach(trigger => {
+            // Для мобильных устройств
+            trigger.addEventListener('click', (e) => {
+                if (window.innerWidth < 768) {
+                    e.preventDefault();
+                    const submenu = trigger.nextElementSibling;
+                    submenu.classList.toggle('active');
+                }
+            });
+
+            // Для десктопов
+            trigger.addEventListener('mouseenter', (e) => {
+                if (window.innerWidth >= 768) {
+                    const submenu = trigger.nextElementSibling;
+                    submenu.style.opacity = '1';
+                    submenu.style.visibility = 'visible';
+                }
+            });
+
+            trigger.parentElement.addEventListener('mouseleave', (e) => {
+                if (window.innerWidth >= 768) {
+                    const submenu = trigger.nextElementSibling;
+                    submenu.style.opacity = '0';
+                    submenu.style.visibility = 'hidden';
+                }
+            });
+        });
+
+        // Закрытие меню
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.sidebar') && 
+                !e.target.closest('.burger-btn')) {
+                sidebar.classList.remove('active');
+                overlay.style.display = 'none';
+                document.querySelectorAll('.submenu').forEach(sub => {
+                    sub.classList.remove('active');
+                });
+            }
+        });
+
+        // Ресайз окна
+        window.addEventListener('resize', () => {
+            if (window.innerWidth >= 768) {
+                sidebar.classList.remove('active');
+                overlay.style.display = 'none';
+                document.querySelectorAll('.submenu').forEach(sub => {
+                    sub.classList.remove('active');
+                });
+            }
+        });
+    </script>
+</body>
+</html>
